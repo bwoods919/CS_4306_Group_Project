@@ -70,6 +70,9 @@ public class NodeGraph extends JFrame {
             for (int i = 0; i < numNodes; i++) {
                 Point node = nodePositions.get(i);
                 g.fillOval(node.x, node.y, NODE_SIZE, NODE_SIZE);
+                g.setColor(Color.WHITE);
+                g.drawString(Character.toString((char)(i+65)), node.x + NODE_SIZE / 2 - 4, node.y + NODE_SIZE / 2 + 4);
+                g.setColor(Color.BLACK);
             }
         }
     }
