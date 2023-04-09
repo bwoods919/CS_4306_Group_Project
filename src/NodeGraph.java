@@ -19,6 +19,26 @@ public class NodeGraph extends JFrame {
         setVisible(true);
     }
 
+    public void bfs(int startNode, JPanel panel) {
+        GraphPanel graphPanel = (GraphPanel) panel;
+        Set<Integer> visited = new HashSet<>();
+        Queue<Integer> queue = new LinkedList<>();
+        queue.add(startNode);
+
+        while (!queue.isEmpty()) {
+            int currentNode = queue.poll();
+            visited.add(currentNode);
+            System.out.print(Character.toString((char)(currentNode+65)) + " ");
+
+            for (int i = 0; i < graphPanel.numNodes; i++) {
+                if (graphPanel.adjacencyMatrix[currentNode][i] == 1 && !visited.contains(i)) {
+                    queue.add(i);
+                    visited.add(i);
+                }
+            }
+        }
+    }
+
     public static void main(String[] args) {
         int[][] adjacencyMatrix = {
                 {0, 1, 0, 0, 1},
@@ -27,7 +47,8 @@ public class NodeGraph extends JFrame {
                 {0, 0, 1, 0, 1},
                 {1, 1, 0, 1, 0}
         };
-        new NodeGraph(adjacencyMatrix);
+        NodeGraph graph = new NodeGraph(adjacencyMatrix);
+        graph.bfs(0, graph.panel);
     }
 
     private class GraphPanel extends JPanel {
@@ -77,3 +98,4 @@ public class NodeGraph extends JFrame {
         }
     }
 }
+
