@@ -105,6 +105,11 @@ public class NodeGraph extends JFrame {
             // Generate random positions for the nodes
             Random random = new Random();
             for (int i = 0; i < numNodes; i++) {
+                if (getWidth() - NODE_SIZE > 0) {
+                    int x = random.nextInt(getWidth() - NODE_SIZE);
+                    int y = random.nextInt(getHeight() - NODE_SIZE);
+                    nodePositions.put(i, new Point(x, y));
+                }
                 int x = random.nextInt(getWidth() - NODE_SIZE);
                 int y = random.nextInt(getHeight() - NODE_SIZE);
                 nodePositions.put(i, new Point(x, y));
