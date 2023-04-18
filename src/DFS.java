@@ -95,7 +95,7 @@ public class DFS extends JFrame {
         public void addNotify() {
             super.addNotify();
 
-            if (isVisible() && getWidth() > 0) {
+            if (isVisible()) {
                 generateNodePositions();
                 this.positionsGenerated = true;
             }
@@ -106,7 +106,7 @@ public class DFS extends JFrame {
             Random random = new Random();
             for (int i = 0; i < numNodes; i++) {
                 if (getWidth() - NODE_SIZE > 0) {
-                    int x = random.nextInt(Math.max(getWidth() - NODE_SIZE, 1));
+                    int x = random.nextInt(getWidth() - NODE_SIZE);
                     int y = random.nextInt(getHeight() - NODE_SIZE);
                     nodePositions.put(i, new Point(x, y));
                 }
@@ -117,46 +117,50 @@ public class DFS extends JFrame {
         }
 
         @Override
+        public boolean isVisible() {
+            return super.isVisible() && getWidth() > 0 && getHeight() > 0;
+        }
+
+        @Override
         protected void paintComponent(Graphics g) {
             super.paintComponent(g);
 
+            // Check if positions have been generated
             if (!positionsGenerated) {
-                return;
+                generateNodePositions();
+                this.positionsGenerated = true;
             }
 
-            Graphics2D g2d = (Graphics2D) g;
-
-            // Draw edges
-            g2d.setColor(Color.BLACK);
             for (int i = 0; i < numNodes; i++) {
-                for (int j = i; j < numNodes; j++) {
+                for (int j = i + 1; j < numNodes; j++) {
                     if (adjacencyMatrix[i][j] == 1) {
-                        Point p1 = nodePositions.get(i);
-                        Point p2 = nodePositions.get(j);
-                        g2d.drawLine(p1.x + NODE_SIZE / 2, p1.y + NODE_SIZE / 2,
-                                p2.x + NODE_SIZE / 2, p2.y + NODE_SIZE / 2);
+                        Point node1 = nodePositions.get(i);
+                        Point node2 = nodePositions.get(j);
+
+                        if (visited.contains(i) && visited.contains(j)) {
+                            g.setColor(Color.RED);
+                        } else {
+                            g.setColor(Color.BLACK);
+                        }
+                        g.drawLine(node1.x + NODE_SIZE / 2, node1.y + NODE_SIZE / 2,
+                                node2.x + NODE_SIZE / 2, node2.y + NODE_SIZE / 2);
                     }
                 }
             }
 
-            // Draw nodes
             for (int i = 0; i < numNodes; i++) {
-                Point p = nodePositions.get(i);
-                g2d.setColor(Color.WHITE);
-                g2d.fillOval(p.x, p.y, NODE_SIZE, NODE_SIZE);
-                g2d.setColor(Color.BLACK);
-                g2d.drawOval(p.x, p.y, NODE_SIZE, NODE_SIZE);
-                g2d.drawString(Character.toString((char) (i + 65)), p.x + NODE_SIZE / 2 - 5, p.y + NODE_SIZE / 2 + 5);
-
-                if (i == currentNode) {
-                    g2d.setColor(Color.BLUE);
-                    g2d.drawOval(p.x - 2, p.y - 2, NODE_SIZE + 4, NODE_SIZE + 4);
-                }
-
+                Point node = nodePositions.get(i);
                 if (visited.contains(i)) {
-                    g2d.setColor(Color.GREEN);
-                    g2d.fillOval(p.x + 1, p.y + 1, NODE_SIZE - 2, NODE_SIZE - 2);
+                    g.setColor(Color.RED);
+                } else if (i == currentNode) { // set color to yellow for current node
+                    g.setColor(Color.YELLOW);
+                } else {
+                    g.setColor(Color.BLACK);
                 }
+                g.fillOval(node.x, node.y, NODE_SIZE, NODE_SIZE);
+                g.setColor(Color.WHITE);
+                g.drawString(Character.toString((char)(i+65)), node.x + NODE_SIZE / 2 - 4, node.y + NODE_SIZE / 2 + 4);
+                g.setColor(Color.BLACK);
             }
         }
     }

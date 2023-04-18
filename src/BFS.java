@@ -77,24 +77,24 @@ public class BFS extends JFrame {
     private class GraphPanel extends JPanel {
 
         private final int NODE_SIZE = 30;
-    
+
         private int[][] adjacencyMatrix;
         private int numNodes;
         private Map<Integer, Point> nodePositions;
         private int currentNode;
         private boolean positionsGenerated;
-    
+
         public GraphPanel(int[][] adjacencyMatrix) {
             this.adjacencyMatrix = adjacencyMatrix;
             this.numNodes = adjacencyMatrix.length;
             this.nodePositions = new HashMap<>();
             this.positionsGenerated = false;
         }
-        
+
         @Override
         public void addNotify() {
             super.addNotify();
-    
+
             if (isVisible()) {
                 generateNodePositions();
                 this.positionsGenerated = true;
@@ -130,13 +130,13 @@ public class BFS extends JFrame {
                 generateNodePositions();
                 this.positionsGenerated = true;
             }
-    
+
             for (int i = 0; i < numNodes; i++) {
                 for (int j = i + 1; j < numNodes; j++) {
                     if (adjacencyMatrix[i][j] == 1) {
                         Point node1 = nodePositions.get(i);
                         Point node2 = nodePositions.get(j);
-    
+
                         if (visited.contains(i) && visited.contains(j)) {
                             g.setColor(Color.RED);
                         } else {
@@ -147,11 +147,13 @@ public class BFS extends JFrame {
                     }
                 }
             }
-    
+
             for (int i = 0; i < numNodes; i++) {
                 Point node = nodePositions.get(i);
                 if (visited.contains(i)) {
                     g.setColor(Color.RED);
+                } else if (i == currentNode) { // set color to yellow for current node
+                    g.setColor(Color.YELLOW);
                 } else {
                     g.setColor(Color.BLACK);
                 }
@@ -161,6 +163,5 @@ public class BFS extends JFrame {
                 g.setColor(Color.BLACK);
             }
         }
-    } 
+    }
 }
-
